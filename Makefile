@@ -1,3 +1,5 @@
+# Modified 2016 - Matthew Weitzel
+#
 # Copyright (c) 2012 Jerry Kuch
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -18,8 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-setsid: setsid.c
-	gcc -o setsid setsid.c
+setpgid: setpgid.c
+	gcc -o setpgid setpgid.c
 
 clean:
-	rm setsid
+	rm setpgid

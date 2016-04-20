@@ -1,4 +1,7 @@
 /*
+ * Modified 2016 - Matthew Weitzel
+*/
+/*
  * Copyright (c) 2012 Jerry Kuch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,19 +28,19 @@
 #include <stdlib.h>
 
 /**
- *  An ersatz setsid command for those Unixes (e.g. Mac OS X) that
+ *  An ersatz setpgid command for those Unixes (e.g. Mac OS X) that
  *  don't have one.  Intended to work like (or enough like) the one
  *  from the util-linux-ng package that I can run the RabbitMQ test
  *  suite post summer 2011 on a Mac OS X dev machine.
  *
  *  Synopsis:
- *      setsid program [arg...]
+ *      setpgid program [arg...]
  *
  *  Description:
- *      setsid runs a program in a new session.
+ *      setpgid runs a program in a new group.
  *
  *  See Also:
- *      setsid(2)
+ *      setpgid(2)
  *
  */
 int
@@ -66,25 +69,25 @@ main(int argc, char *argv[])
                 perror("fork");
                 exit(1);
             default:
-                // We're in the parent process (setsid itself), child
+                // We're in the parent process (setpgid itself), child
                 // creation was OK...
                 exit(0);
         }
     }
 
-    // Create a new session and make this setsid process the session
-    // leader for the new session; This setsid process also becomes
+    // Create a new group and make this setpgid process the group
+    // leader for the new group; This setpgid process also becomes
     // the process group leader of a new process group and has no
     // controlling terminal...
-    if (setsid() < 0)
+    if (setpgid() < 0)
     {
-        perror("setsid");
+        perror("setpgid");
         exit(1);
     }
 
     // Execute the requested command with the given arguments,
     // replacing our current process image (which now has its own
-    // happy session and group) with a new process image...
+    // happy group) with a new process image...
     execvp(argv[1], argv + 1);
 
     // If we got to here, squawk and exit with an error code...
