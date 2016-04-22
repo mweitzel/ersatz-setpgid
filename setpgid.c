@@ -53,33 +53,11 @@ main(int argc, char *argv[])
                 (char *)argv[0]);
     }
 
-    // Are we the leader of a process group (i.e. is our process id
-    // equal to our process group id?)?
-    if (getpgrp() == getpid())
-    {
-
-        switch(fork())
-        {
-            case 0:
-                // We're in the child process...
-                break;
-            case -1:
-                // We're in the parent process and child creation
-                // failed, so squawk and exit with error code...
-                perror("fork");
-                exit(1);
-            default:
-                // We're in the parent process (setpgid itself), child
-                // creation was OK...
-                exit(0);
-        }
-    }
-
     // Create a new group and make this setpgid process the group
     // leader for the new group; This setpgid process also becomes
     // the process group leader of a new process group and has no
     // controlling terminal...
-    if (setpgid() < 0)
+    if (setpgid(0,0) < 0)
     {
         perror("setpgid");
         exit(1);
@@ -94,3 +72,4 @@ main(int argc, char *argv[])
     perror("execvp");
     exit(1);
 }
+
